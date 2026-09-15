@@ -11,6 +11,7 @@ const port = "52880";
 const url = `http://${host}:${port}`;
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 const useDevServer = process.argv.includes("--dev");
+const runInBackground = process.argv.includes("--background");
 const npmScript = useDevServer ? "dev:fixed" : "deploy:local";
 
 function run(command, args, options = {}) {
@@ -96,7 +97,7 @@ waitForServer().then((ready) => {
   if (!ready || opened || server.exitCode !== null) return;
   opened = true;
   console.log(`Opening ${url}`);
-  openBrowser();
+  if (!runInBackground) openBrowser();
 });
 
 function stopServer(signal) {

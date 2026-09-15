@@ -14,6 +14,14 @@ if ! command -v node >/dev/null 2>&1 || ! command -v npm >/dev/null 2>&1; then
   exit 1
 fi
 
+# `python3 -m pip install --user xiaohongshu-cli` installs xhs outside the
+# non-interactive shell PATH used by this launcher. Pass its absolute path to
+# the local server when present so searches work without manual PATH setup.
+PYTHON_USER_BIN="$(python3 -c 'import site; print(site.USER_BASE)' 2>/dev/null)/bin"
+if [[ -x "$PYTHON_USER_BIN/xhs" ]]; then
+  export XHS_CLI_COMMAND="$PYTHON_USER_BIN/xhs"
+fi
+
 node scripts/start-fixed.mjs
 
 echo ""
